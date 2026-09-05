@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f4f8;
+    color: #333;
+    overflow: hidden; /* Evita lo scroll sul monitor */
+    height: 100vh;
+    width: 100vw;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003366; /* Blu Istituzionale */
+    color: white;
+    padding: 20px 40px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.datetime {
+    text-align: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#current-time {
+    display: block;
+    font-size: 2.5rem;
+    color: #ffcc00; /* Giallo per evidenziare l'ora */
+}
+
+/* Main Content */
+.main-content {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    min-height: 0; /* Permette il corretto ridimensionamento flex */
+    margin-bottom: 20px;
+}
+
+.notice-board, .news-board {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.notice-board h2, .news-board h2 {
+    color: #003366;
+    border-bottom: 4px solid #ffcc00;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+/* Elementi dinamici */
+.item-card {
+    background: #f9fbfd;
+    border-left: 6px solid #003366;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.item-card.urgent {
+    border-left-color: #cc0000;
+    background: #fff5f5;
+}
+
+.item-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+}
+
+.item-card p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Barra Scorrevole (Ticker) */
+.ticker-wrap {
+    background: #333;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker {
+    display: inline-block;
+    font-size: 1.4rem;
+    padding-left: 100%;
+    animation: ticker 25s linear infinite;
+}
+
+/* Animazioni */
+@keyframes ticker {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,27 @@
+{
+  "ticker": "ATTENZIONE: Domani 6 Marzo le lezioni termineranno alle ore 13:00 per assemblea sindacale.",
+  "avvisi": [
+    {
+      "titolo": "Ricevimento Genitori",
+      "contenuto": "Le prenotazioni per i colloqui pomeridiani sono aperte sul registro elettronico.",
+      "urgente": false
+    },
+    {
+      "titolo": "⚠️ Chiusura Scuola",
+      "contenuto": "Si comunica che la scuola resterà chiusa il prossimo lunedì per festività patronale.",
+      "urgente": true
+    }
+  ],
+  "eventi": [
+    {
+      "data": "12 Mar",
+      "titolo": "Gara di Matematica",
+      "descrizione": "Fase d'istituto per le classi biennio in aula magna."
+    },
+    {
+      "data": "18 Mar",
+      "titolo": "Incontro Orientamento",
+      "descrizione": "Classi quinte: incontro con le Università del territorio."
+    }
+  ]
+}
