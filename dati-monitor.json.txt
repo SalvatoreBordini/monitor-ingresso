@@ -1,5 +1,5 @@
 {
-  "ticker": "ATTENZIONE: Domani 6 Marzo le lezioni termineranno alle ore 13:00 per assemblea sindacale.",
+  "ticker": "Domani 8 settembre riunione con i genitori degli iscritti scuola dell'infanzia",
   "avvisi": [
     {
       "titolo": "Ricevimento Genitori",
@@ -14,14 +14,14 @@
   ],
   "eventi": [
     {
-      "data": "12 Mar",
-      "titolo": "Gara di Matematica",
-      "descrizione": "Fase d'istituto per le classi biennio in aula magna."
+      "data": "7 Settembre 2026",
+      "titolo": "Incontro docenti quinta primaria-docenti prima secondaria",
+      "descrizione": "Incontro conoscitivo di alunni e alunne"
     },
     {
-      "data": "18 Mar",
-      "titolo": "Incontro Orientamento",
-      "descrizione": "Classi quinte: incontro con le Università del territorio."
+      "data": "8 Settembre 2026",
+      "titolo": "Incontro genitori scuola dell'infanzia",
+      "descrizione": "Salone dalle ore 17:00 alle ore 18:00"
     }
   ]
 }
