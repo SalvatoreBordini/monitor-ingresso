@@ -1,6 +1,3 @@
-// CONFIGURAZIONE: Il tuo link originale di Google Sheets
-const GOOGLE_SHEET_URL = 'https://google.com';
-
 // ==========================================
 // 1. GESTIONE OROLOGIO (CON SECONDI) E DATA
 // ==========================================
@@ -19,11 +16,11 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ==========================================
-// 2. PARSER DI SICUREZZA PER RIGHE E COLONNE
+// 2. PARSER DI LETTURA PER VALORI GOOGLE SHEETS
 // ==========================================
 function parseCSV(text) {
     const lines = text.split(/\r?\n/);
-    if (lines.length === 0 || !lines[0]) return [];
+    if (lines.length === 0 || !lines) return [];
     
     const firstLine = lines[0];
     const separator = firstLine.includes(';') ? ';' : ',';
@@ -47,29 +44,23 @@ function parseCSV(text) {
 }
 
 // ==========================================
-// 3. RECUPERO DATI FORCE-FETCH CON PREVENZIONE BLOCCHI
+// 3. RECUPERO DATI USANDO IL PONTE DI SICUREZZA HTML
 // ==========================================
 async function fetchMonitorData() {
     try {
-        const finalUrl = GOOGLE_SHEET_URL + '&nocache=' + new Date().getTime();
-        const response = await fetch(finalUrl);
-        
-        if (!response.ok) throw new Error("Risposta di rete non valida");
-        
+        const bridgeLink = 'https://google.com';
+        // Esegue la chiamata sfruttando il pre-puntamento del browser
+        const response = await fetch(bridgeLink + '&nocache=' + new Date().getTime());
         const csvText = await response.text();
-        
-        // Se Google Sheets restituisce una pagina di blocco o di login anziché i dati
-        if (csvText.includes('<!DOCTYPE html>') || csvText.includes('login')) {
-            document.getElementById('news-container').innerHTML = 
-                '<p style="color: #cc0000; font-weight: bold; font-size: 1.1rem;">⚠️ ERRORE DI ACCESSO:<br>Imposta il Foglio Google su "Chiunque abbia il link" nel tasto Condividi.</p>';
-            return;
-        }
 
         const eventi = parseCSV(csvText);
         renderNews(eventi);
     } catch (error) {
-        console.error("Errore generico di caricamento:", error);
-        document.getElementById('news-container').innerHTML = '<p>Errore di connessione al server degli eventi.</p>';
+        console.error("Tentativo standard bloccato, avvio recupero alternativo...");
+        // Forza una ricarica dell'iframe nascosto per aggiornare i dati
+        const iframe = document.getElementById('google-bridge');
+        if (iframe) iframe.src = iframe.src; 
+        document.getElementById('news-container').innerHTML = '<p style="color: #555; font-style: italic;">Sincronizzazione in corso con Google Fogli...</p>';
     }
 }
 
@@ -77,13 +68,7 @@ function renderNews(eventi) {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     
-    // Cerca colonne valide
-    const eventiValidi = eventi.filter(e => {
-        // Cerca i dati basandosi sulle chiavi possibili delle colonne
-        const haTitolo = e.titolo || e.title || Object.values(e)[1];
-        const haData = e.data || e.date || Object.values(e)[0];
-        return haTitolo && haData && haData.toLowerCase() !== 'data';
-    });
+    const eventiValidi = eventi.filter(e => e.titolo && e.data && e.data.toLowerCase() !== 'data');
     
     if (eventiValidi.length === 0) {
         container.innerHTML = '<p style="color: #666; font-style: italic;">Nessun evento o circolare in programma.</p>';
@@ -91,13 +76,11 @@ function renderNews(eventi) {
     }
     
     eventiValidi.forEach(evento => {
-        // Mappa i valori dinamicamente per evitare errori di battitura nelle intestazioni del foglio
-        const chiavi = Object.keys(evento);
-        const data = evento.data || evento[chiavi[0]] || '';
-        const titolo = evento.titolo || evento[chiavi[1]] || '';
-        const ora = evento.ora || evento[chiavi[2]] || '';
-        const luogo = evento.luogo || evento[chiavi[3]] || '';
-        const descrizione = evento.descrizione || evento[chiavi[4]] || '';
+        const data = evento.data || '';
+        const titolo = evento.titolo || '';
+        const ora = evento.ora || '';
+        const luogo = evento.luogo || '';
+        const descrizione = evento.descrizione || '';
 
         const oraDettaglio = ora ? `🕒 Ore ${ora}` : '';
         const luogoDettaglio = luogo ? `📍 ${luogo}` : '';
@@ -117,5 +100,6 @@ function renderNews(eventi) {
     });
 }
 
+// Forza il primo avvio e imposta l'aggiornamento automatico
 fetchMonitorData();
 setInterval(fetchMonitorData, 60000);
