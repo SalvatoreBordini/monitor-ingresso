@@ -29,20 +29,14 @@
             <section class="notice-board">
                 <h2>📢 AVVISI IMPORTANTI</h2>
                 
-                <!-- BOX METEO TORINO INIZIO (Versione con aggancio forzato) -->
+                <!-- BOX METEO TORINO (Nuova versione forzata con Iframe nativo) -->
                 <div class="weather-box">
-                    <a class="weatherwidget-io" id="torino-weather-widget" href="https://forecast7.com" data-label_1="TORINO" data-label_2="METEO IN DIRETTA" data-theme="pure" data-basecolor="#003366" data-accent="" data-textcolor="#333333" data-cloudfill="#f0f4f8" >TORINO METEO</a>
-                    <script>
-                    (function() {
-                        var id = 'weatherwidget-io-js';
-                        if (document.getElementById(id)) return;
-                        var js = document.createElement('script'); 
-                        js.id = id; 
-                        js.src = 'https://weatherwidget.io/js/widget.min.js';
-                        // Forza il caricamento inserendo lo script direttamente nell'head del sito
-                        document.head.appendChild(js);
-                    })();
-                    </script>
+                    <iframe src="https://forecast7.com" 
+                            style="width: 100%; height: 110px; border: none; overflow: hidden;" 
+                            scroll="no" 
+                            frameborder="0" 
+                            allowtransparency="true">
+                    </iframe>
                 </div>
                 <!-- BOX METEO TORINO FINE -->
 
