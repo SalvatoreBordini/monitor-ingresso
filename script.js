@@ -1,6 +1,5 @@
-// CONFIGURAZIONE: Estratto l'ID univoco dal tuo link di Google Sheets
-const SHEET_ID = '1Rhm88eN5NYQejIzjKx7H4LGrrm8Xpv85xX-szGbkznPETKtk_gDXhrULWXPqZK4jO9f3RDm6E46r9B';
-const GOOGLE_JSON_URL = `https://google.com{SHEET_ID}/gviz/tq?tqx=out:json`;
+// CONFIGURAZIONE: Il tuo link originale di Google Sheets
+const GOOGLE_SHEET_URL = 'https://google.com';
 
 // ==========================================
 // 1. GESTIONE OROLOGIO (CON SECONDI) E DATA
@@ -20,39 +19,57 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ==========================================
-// 2. RECUPERO DATI IN MODALITÀ APÌ GOOGLE (ANTI-CORS)
+// 2. PARSER DI SICUREZZA PER RIGHE E COLONNE
+// ==========================================
+function parseCSV(text) {
+    const lines = text.split(/\r?\n/);
+    if (lines.length === 0 || !lines[0]) return [];
+    
+    const firstLine = lines[0];
+    const separator = firstLine.includes(';') ? ';' : ',';
+    
+    const headers = firstLine.split(separator).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+    const result = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        const currentline = line.split(separator).map(cell => cell.trim().replace(/"/g, ''));
+        const obj = {};
+        
+        for (let j = 0; j < headers.length; j++) {
+            obj[headers[j]] = currentline[j] || '';
+        }
+        result.push(obj);
+    }
+    return result;
+}
+
+// ==========================================
+// 3. RECUPERO DATI FORCE-FETCH CON PREVENZIONE BLOCCHI
 // ==========================================
 async function fetchMonitorData() {
     try {
-        const finalUrl = GOOGLE_JSON_URL + '&nocache=' + new Date().getTime();
+        const finalUrl = GOOGLE_SHEET_URL + '&nocache=' + new Date().getTime();
         const response = await fetch(finalUrl);
-        const text = await response.text();
         
-        // Google restituisce una stringa protetta "google.visualization.Query.setResponse({...})"
-        // Questo codice estrae solo il JSON puro all'interno delle parentesi tonda
-        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-        const data = JSON.parse(jsonString);
+        if (!response.ok) throw new Error("Risposta di rete non valida");
         
-        // Elabora le righe della tabella di Google
-        const rows = data.table.rows;
-        const eventi = [];
+        const csvText = await response.text();
         
-        rows.forEach(row => {
-            const cells = row.c;
-            // Estrae i dati controllando se la cella esiste, altrimenti lascia vuoto
-            eventi.push({
-                data: cells[0] ? cells[0].v : '',
-                titolo: cells[1] ? cells[1].v : '',
-                ora: cells[2] ? cells[2].v : '',
-                luogo: cells[3] ? cells[3].v : '',
-                descrizione: cells[4] ? cells[4].v : ''
-            });
-        });
-        
+        // Se Google Sheets restituisce una pagina di blocco o di login anziché i dati
+        if (csvText.includes('<!DOCTYPE html>') || csvText.includes('login')) {
+            document.getElementById('news-container').innerHTML = 
+                '<p style="color: #cc0000; font-weight: bold; font-size: 1.1rem;">⚠️ ERRORE DI ACCESSO:<br>Imposta il Foglio Google su "Chiunque abbia il link" nel tasto Condividi.</p>';
+            return;
+        }
+
+        const eventi = parseCSV(csvText);
         renderNews(eventi);
     } catch (error) {
-        console.error("Errore di caricamento dall'API Google Sheets:", error);
-        document.getElementById('news-container').innerHTML = '<p>Errore di sincronizzazione con Google Sheets.</p>';
+        console.error("Errore generico di caricamento:", error);
+        document.getElementById('news-container').innerHTML = '<p>Errore di connessione al server degli eventi.</p>';
     }
 }
 
@@ -60,8 +77,13 @@ function renderNews(eventi) {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     
-    // Rimuove le righe vuote o le righe di intestazione del foglio
-    const eventiValidi = eventi.filter(e => e.titolo && e.data && e.data.toLowerCase() !== 'data');
+    // Cerca colonne valide
+    const eventiValidi = eventi.filter(e => {
+        // Cerca i dati basandosi sulle chiavi possibili delle colonne
+        const haTitolo = e.titolo || e.title || Object.values(e)[1];
+        const haData = e.data || e.date || Object.values(e)[0];
+        return haTitolo && haData && haData.toLowerCase() !== 'data';
+    });
     
     if (eventiValidi.length === 0) {
         container.innerHTML = '<p style="color: #666; font-style: italic;">Nessun evento o circolare in programma.</p>';
@@ -69,8 +91,16 @@ function renderNews(eventi) {
     }
     
     eventiValidi.forEach(evento => {
-        const oraDettaglio = evento.ora ? `🕒 Ore ${evento.ora}` : '';
-        const luogoDettaglio = evento.luogo ? `📍 ${evento.luogo}` : '';
+        // Mappa i valori dinamicamente per evitare errori di battitura nelle intestazioni del foglio
+        const chiavi = Object.keys(evento);
+        const data = evento.data || evento[chiavi[0]] || '';
+        const titolo = evento.titolo || evento[chiavi[1]] || '';
+        const ora = evento.ora || evento[chiavi[2]] || '';
+        const luogo = evento.luogo || evento[chiavi[3]] || '';
+        const descrizione = evento.descrizione || evento[chiavi[4]] || '';
+
+        const oraDettaglio = ora ? `🕒 Ore ${ora}` : '';
+        const luogoDettaglio = luogo ? `📍 ${luogo}` : '';
         
         const infoSecondarie = (oraDettaglio || luogoDettaglio) 
             ? `<p class="event-meta">${oraDettaglio} &nbsp;&nbsp; ${luogoDettaglio}</p>` 
@@ -79,14 +109,13 @@ function renderNews(eventi) {
         const div = document.createElement('div');
         div.className = 'item-card';
         div.innerHTML = `
-            <h3>📅 ${evento.data} - ${evento.titolo}</h3>
+            <h3>📅 ${data} - ${titolo}</h3>
             ${infoSecondarie}
-            <p>${evento.descrizione}</p>
+            <p>${descrizione}</p>
         `;
         container.appendChild(div);
     });
 }
 
-// Avvia subito il controllo e ripeti ogni 60 secondi
 fetchMonitorData();
 setInterval(fetchMonitorData, 60000);
