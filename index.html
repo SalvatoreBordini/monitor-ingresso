@@ -14,7 +14,7 @@
                 <img src="logo.png" alt="Logo Scuola" class="img-logo">
                 <div>
                     <h2>ISTITUTO COMPRENSIVO</h2>
-                    <p class="location-text">📍 Sede Centrale - Via Germonio, 12 Torino</p>
+                    <p class="location-text">📍 Sede Centrale - Torino</p>
                 </div>
             </div>
             <div class="datetime">
@@ -25,7 +25,7 @@
 
         <!-- Contenuto Principale: Diviso in due colonne -->
         <main class="main-content">
-            <!-- Colonna Sinistra: Avvisi Principali e Meteo -->
+            <!-- Colonna Sinistra: Avvisi Principali, Meteo e Info Segreteria -->
             <section class="notice-board">
                 <h2>📢 AVVISI IMPORTANTI</h2>
                 
@@ -40,16 +40,46 @@
                                 style="width: 100%; height: 160px; border: none; overflow: hidden;">
                         </iframe>
                     </div>
-                    <!-- Questo blocco copre la casella di ricerca superiore e impedisce i clic accidentali -->
                     <div class="weather-mask"></div>
                 </div>
                 <!-- BOX METEO FINE -->
 
+                <!-- SCHEDA INFORMAZIONI RICEVIMENTO SEGRETERIA -->
                 <div id="notices-container">
-                    <div class="item-card urgent">
-                        <h3>⚠️ Orario Ricevimento</h3>
-                        <p>Si ricorda che la segreteria riceve il pubblico esclusivamente su appuntamento dal lunedì al venerdì.</p>
+                    
+                    <!-- BLOCCO 1: SU APPUNTAMENTO -->
+                    <div class="item-card urgent" style="margin-bottom: 20px;">
+                        <h3>🕒 Ricevimento su Appuntamento</h3>
+                        <p style="margin-bottom: 8px;">Il ricevimento del pubblico avviene <strong>preferibilmente su appuntamento</strong> dal lunedì al venerdì (non festivi).</p>
+                        
+                        <div style="background: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #f3d8d8; font-size: 1.05rem; color: #333;">
+                            <p style="margin-bottom: 6px;">📞 <strong>Contatti Telefonici:</strong> 011 01159190</p>
+                            <p style="margin-bottom: 8px; padding-left: 24px; font-size: 0.95rem; color: #555;">
+                                Ore 8:30 - 9:30 &nbsp;|&nbsp; Ore 13:30 - 14:30
+                            </p>
+                            <p>✉️ <strong>Email:</strong> <span style="color: #003366; font-weight: bold;">toic816001@istruzione.it</span></p>
+                        </div>
                     </div>
+
+                    <!-- BLOCCO 2: ACCESSO LIBERO -->
+                    <div class="item-card" style="border-left-color: #008000; background: #f4f9f4;">
+                        <h3 style="color: #008000;">🔓 Accesso Libero (Senza Appuntamento)</h3>
+                        <p style="margin-bottom: 8px;">È possibile accedere alla segreteria liberamente, senza appuntamento, nei seguenti giorni:</p>
+                        
+                        <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #d8e2d8;">
+                            <table style="width: 100%; font-size: 1.1rem; border-collapse: collapse; color: #333;">
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 6px 0; font-weight: bold; width: 45%;">Martedì</td>
+                                    <td style="padding: 6px 0; color: #008000; font-weight: bold;">10:00 - 11:00</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 6px 0; font-weight: bold;">Giovedì</td>
+                                    <td style="padding: 6px 0; color: #008000; font-weight: bold;">10:00 - 11:00</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
