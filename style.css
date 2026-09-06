@@ -8,7 +8,7 @@
 body {
     background-color: #f0f4f8;
     color: #333;
-    overflow: hidden; /* Evita lo scroll sul monitor */
+    overflow: hidden; /* Evita lo scroll sul monitor principale */
     height: 100vh;
     width: 100vw;
 }
@@ -36,11 +36,11 @@ body {
 .logo-scuola {
     display: flex;
     align-items: center;
-    gap: 20px; /* Spazio tra logo e testo */
+    gap: 20px;
 }
 
 .img-logo {
-    height: 70px; /* Altezza del logo */
+    height: 70px;
     width: auto;
 }
 
@@ -59,12 +59,12 @@ body {
 
 #current-time {
     display: block;
-    font-size: 2.8rem; /* Dimensione aumentata per far stare ore:minuti:secondi */
-    color: #ffcc00; /* Giallo per evidenziare l'ora */
-    font-family: monospace; /* Evita il saltellamento dei numeri con i secondi */
+    font-size: 2.8rem;
+    color: #ffcc00; /* Giallo per evidenziare l'orologio */
+    font-family: monospace; /* Blocca il movimento oscillatorio dei caratteri */
 }
 
-/* Main Content */
+/* Main Content Layout */
 .main-content {
     display: flex;
     gap: 20px;
@@ -90,19 +90,32 @@ body {
     font-size: 1.8rem;
 }
 
-/* Box Meteo */
-/* Stile per il Box Meteo */
-.weather-box {
+/* Mascheramento intelligente casella di ricerca del Meteo */
+.weather-wrapper {
+    position: relative;
     margin-bottom: 25px;
     border-radius: 8px;
     overflow: hidden;
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    padding: 0px;
-    height: 162px;
+    height: 122px; /* Ridotto per troncare la barra di ricerca in alto */
 }
 
-/* Elementi dinamici degli eventi */
+.weather-box iframe {
+    margin-top: -38px; /* Spinge la casella di ricerca fuori dall'area visibile */
+}
+
+.weather-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: transparent;
+}
+
+/* Elementi delle schede degli avvisi e degli eventi */
 .item-card {
     background: #f9fbfd;
     border-left: 6px solid #003366;
@@ -127,7 +140,7 @@ body {
     color: #555;
 }
 
-/* Dettagli di Ora e Luogo dentro la scheda dell'evento */
+/* Dettagli Metadati eventi di Google Sheets (Ora e Luogo) */
 .event-meta {
     font-size: 0.95rem;
     color: #003366;
@@ -138,7 +151,7 @@ body {
     gap: 15px;
 }
 
-/* Barra Scorrevole (Ticker) */
+/* Barra Scorrevole Inferiore (Ticker) */
 .ticker-wrap {
     background: #333;
     color: white;
@@ -155,7 +168,6 @@ body {
     animation: ticker 25s linear infinite;
 }
 
-/* Animazioni */
 @keyframes ticker {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
