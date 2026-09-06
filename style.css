@@ -97,7 +97,7 @@ body {
     overflow-y: auto;
 }
 
-/* Stile per incorporare il foglio Google a tutto schermo nella colonna */
+/* Stile per incorporare il foglio Google */
 .google-sheet-container {
     flex: 1;
     width: 100%;
@@ -139,7 +139,7 @@ body {
     background: transparent;
 }
 
-/* Schede avvisi colonna sinistra */
+/* Schede avvisi */
 .item-card {
     background: #f9fbfd;
     border-left: 6px solid #003366;
