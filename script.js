@@ -1,4 +1,4 @@
-// CONFIGURAZIONE: Il tuo link CSV di Google Fogli inserito correttamente
+// CONFIGURAZIONE: Link inserito e controllato direttamente nel codice
 const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm88eN5NYQejIzjKx7H4LGrrm8Xpv85xX-szGbkznPETKtk_gDXhrULWXPqZK4jO9f3RDm6E46r9B/pub?output=csv';
 
 // ==========================================
@@ -6,6 +6,7 @@ const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR
 // ==========================================
 function updateClock() {
     const now = new Date();
+    
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -19,17 +20,15 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ==========================================
-// 2. PARSER DI CONVERSIONE CSV IN SCHEDE GRAFICHE
+// 2. FUNZIONE PER LEGGERE IL CSV (PUNTO E VIRGOLA / VIRGOLA)
 // ==========================================
 function parseCSV(text) {
     const lines = text.split(/\r?\n/);
-    if (lines.length === 0 || !lines[0]) return [];
+    if (lines.length === 0) return [];
     
-    // Rileva automaticamente se Google separa le celle con virgola o punto e virgola
     const firstLine = lines[0];
     const separator = firstLine.includes(';') ? ';' : ',';
     
-    // Mappa le intestazioni del foglio
     const headers = firstLine.split(separator).map(h => h.trim().toLowerCase().replace(/"/g, ''));
     const result = [];
 
@@ -49,19 +48,20 @@ function parseCSV(text) {
 }
 
 // ==========================================
-// 3. RECUPERO DATI AUTOMATICO (ANTI-CACHE)
+// 3. RECUPERO DATI AUTOMATICO DA GOOGLE SHEETS
 // ==========================================
 async function fetchMonitorData() {
     try {
-        const finalUrl = GOOGLE_SHEET_CSV_URL + '&nocache=' + new Date().getTime();
+        const separator = GOOGLE_SHEET_CSV_URL.includes('?') ? '&' : '?';
+        const finalUrl = GOOGLE_SHEET_CSV_URL + separator + 'nocache=' + new Date().getTime();
+        
         const response = await fetch(finalUrl);
         const csvText = await response.text();
         
         const eventi = parseCSV(csvText);
         renderNews(eventi);
     } catch (error) {
-        console.error("Errore di sincronizzazione dati:", error);
-        document.getElementById('news-container').innerHTML = '<p style="color: #666;">Calendario temporaneamente non disponibile.</p>';
+        console.error("Errore nel caricamento dei dati da Google Sheets:", error);
     }
 }
 
@@ -69,21 +69,20 @@ function renderNews(eventi) {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     
-    // Filtra rimuovendo le righe vuote o l'intestazione ripetuta
-    const eventiValidi = eventi.filter(e => e.titolo && e.data && e.data.toLowerCase() !== 'data');
-    
-    if (eventiValidi.length === 0) {
-        container.innerHTML = '<p style="color: #666; font-style: italic; font-size: 1.1rem;">Nessun evento o circolare in bacheca.</p>';
+    if (eventi.length === 0) {
+        container.innerHTML = '<p>Nessun evento in programma.</p>';
         return;
     }
     
-    eventiValidi.forEach(evento => {
+    eventi.forEach(evento => {
         const data = evento.data || '';
         const titolo = evento.titolo || '';
         const ora = evento.ora || '';
         const luogo = evento.luogo || '';
         const descrizione = evento.descrizione || '';
 
+        if (!titolo || !data) return;
+        
         const oraDettaglio = ora ? `🕒 Ore ${ora}` : '';
         const luogoDettaglio = luogo ? `📍 ${luogo}` : '';
         
