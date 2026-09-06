@@ -32,28 +32,36 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+
 .logo-scuola {
     display: flex;
     align-items: center;
-    gap: 20px; /* Spazio tra il logo e la scritta del nome */
+    gap: 20px; /* Spazio tra logo e testo */
 }
 
 .img-logo {
-    height: 70px; /* Altezza del logo sul monitor (puoi aumentarla o ridurla) */
-    width: auto;  /* Mantiene le proporzioni corrette senza schiacciare l'immagine */
+    height: 70px; /* Altezza del logo */
+    width: auto;
 }
 
+.location-text {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    margin-top: 4px;
+    font-weight: 500;
+}
 
 .datetime {
     text-align: right;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: bold;
 }
 
 #current-time {
     display: block;
-    font-size: 2.5rem;
+    font-size: 2.8rem; /* Dimensione aumentata per far stare ore:minuti:secondi */
     color: #ffcc00; /* Giallo per evidenziare l'ora */
+    font-family: monospace; /* Evita il saltellamento dei numeri con i secondi */
 }
 
 /* Main Content */
@@ -61,7 +69,7 @@ body {
     display: flex;
     gap: 20px;
     flex: 1;
-    min-height: 0; /* Permette il corretto ridimensionamento flex */
+    min-height: 0;
     margin-bottom: 20px;
 }
 
@@ -82,7 +90,17 @@ body {
     font-size: 1.8rem;
 }
 
-/* Elementi dinamici */
+/* Box Meteo */
+.weather-box {
+    margin-bottom: 25px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 5px;
+}
+
+/* Elementi dinamici degli eventi */
 .item-card {
     background: #f9fbfd;
     border-left: 6px solid #003366;
@@ -105,6 +123,17 @@ body {
 .item-card p {
     font-size: 1.1rem;
     color: #555;
+}
+
+/* Dettagli di Ora e Luogo dentro la scheda dell'evento */
+.event-meta {
+    font-size: 0.95rem;
+    color: #003366;
+    font-weight: 600;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 15px;
 }
 
 /* Barra Scorrevole (Ticker) */
