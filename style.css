@@ -64,7 +64,7 @@ body {
     font-family: monospace;
 }
 
-/* Main Content Layout */
+/* Layout colonne */
 .main-content {
     display: flex;
     gap: 20px;
@@ -92,26 +92,15 @@ body {
     font-size: 1.8rem;
 }
 
-#notices-container {
+#notices-container, #news-container {
     flex: 1;
     overflow-y: auto;
 }
 
-/* Stile per incorporare il foglio Google */
-.google-sheet-container {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-}
-
-.google-sheet-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: white;
+.loading-text {
+    color: #666;
+    font-style: italic;
+    font-size: 1.1rem;
 }
 
 /* Meteo */
@@ -139,31 +128,49 @@ body {
     background: transparent;
 }
 
-/* Schede avvisi */
+/* Nuove Schede Eventi Grafiche e Pulite */
 .item-card {
-    background: #f9fbfd;
+    background: #f8fafc;
     border-left: 6px solid #003366;
-    padding: 15px;
+    padding: 18px;
     margin-bottom: 15px;
-    border-radius: 4px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border: 1px solid #e2e8f0;
+    border-left-width: 6px;
 }
 
 .item-card.urgent {
     border-left-color: #cc0000;
     background: #fff5f5;
+    border-top-color: #f3d8d8;
+    border-right-color: #f3d8d8;
+    border-bottom-color: #f3d8d8;
 }
 
 .item-card h3 {
-    font-size: 1.4rem;
-    margin-bottom: 5px;
+    font-size: 1.35rem;
+    color: #1e293b;
+    margin-bottom: 6px;
 }
 
 .item-card p {
     font-size: 1.1rem;
-    color: #555;
+    color: #475569;
+    line-height: 1.5;
 }
 
-/* Ticker */
+.event-meta {
+    font-size: 0.95rem;
+    color: #003366;
+    font-weight: 600;
+    margin-top: 2px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 15px;
+}
+
+/* Ticker scorrevole */
 .ticker-wrap {
     background: #333;
     color: white;
