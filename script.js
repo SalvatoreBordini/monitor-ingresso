@@ -1,3 +1,6 @@
+// CONFIGURAZIONE: Il tuo link CSV di Google Fogli inserito correttamente
+const GOOGLE_SHEET_CSV_URL = 'https://google.com';
+
 // ==========================================
 // 1. GESTIONE OROLOGIO (CON SECONDI) E DATA
 // ==========================================
@@ -16,15 +19,17 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ==========================================
-// 2. PARSER DI LETTURA PER VALORI GOOGLE SHEETS
+// 2. PARSER DI CONVERSIONE CSV IN SCHEDE GRAFICHE
 // ==========================================
 function parseCSV(text) {
     const lines = text.split(/\r?\n/);
-    if (lines.length === 0 || !lines) return [];
+    if (lines.length === 0 || !lines[0]) return [];
     
+    // Rileva automaticamente se Google separa le celle con virgola o punto e virgola
     const firstLine = lines[0];
     const separator = firstLine.includes(';') ? ';' : ',';
     
+    // Mappa le intestazioni del foglio
     const headers = firstLine.split(separator).map(h => h.trim().toLowerCase().replace(/"/g, ''));
     const result = [];
 
@@ -44,23 +49,19 @@ function parseCSV(text) {
 }
 
 // ==========================================
-// 3. RECUPERO DATI USANDO IL PONTE DI SICUREZZA HTML
+// 3. RECUPERO DATI AUTOMATICO (ANTI-CACHE)
 // ==========================================
 async function fetchMonitorData() {
     try {
-        const bridgeLink = 'https://google.com';
-        // Esegue la chiamata sfruttando il pre-puntamento del browser
-        const response = await fetch(bridgeLink + '&nocache=' + new Date().getTime());
+        const finalUrl = GOOGLE_SHEET_CSV_URL + '&nocache=' + new Date().getTime();
+        const response = await fetch(finalUrl);
         const csvText = await response.text();
-
+        
         const eventi = parseCSV(csvText);
         renderNews(eventi);
     } catch (error) {
-        console.error("Tentativo standard bloccato, avvio recupero alternativo...");
-        // Forza una ricarica dell'iframe nascosto per aggiornare i dati
-        const iframe = document.getElementById('google-bridge');
-        if (iframe) iframe.src = iframe.src; 
-        document.getElementById('news-container').innerHTML = '<p style="color: #555; font-style: italic;">Sincronizzazione in corso con Google Fogli...</p>';
+        console.error("Errore di sincronizzazione dati:", error);
+        document.getElementById('news-container').innerHTML = '<p style="color: #666;">Calendario temporaneamente non disponibile.</p>';
     }
 }
 
@@ -68,10 +69,11 @@ function renderNews(eventi) {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     
+    // Filtra rimuovendo le righe vuote o l'intestazione ripetuta
     const eventiValidi = eventi.filter(e => e.titolo && e.data && e.data.toLowerCase() !== 'data');
     
     if (eventiValidi.length === 0) {
-        container.innerHTML = '<p style="color: #666; font-style: italic;">Nessun evento o circolare in programma.</p>';
+        container.innerHTML = '<p style="color: #666; font-style: italic; font-size: 1.1rem;">Nessun evento o circolare in bacheca.</p>';
         return;
     }
     
@@ -100,6 +102,5 @@ function renderNews(eventi) {
     });
 }
 
-// Forza il primo avvio e imposta l'aggiornamento automatico
 fetchMonitorData();
 setInterval(fetchMonitorData, 60000);
