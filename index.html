@@ -13,7 +13,7 @@
             <div class="logo-scuola">
                 <img src="logo.png" alt="Logo Scuola" class="img-logo">
                 <div>
-                    <h2>NOME ISTITUTO COMPRENSIVO</h2>
+                    <h2>ISTITUTO COMPRENSIVO</h2>
                     <p class="location-text">📍 Sede Centrale - Torino</p>
                 </div>
             </div>
@@ -29,15 +29,19 @@
             <section class="notice-board">
                 <h2>📢 AVVISI IMPORTANTI</h2>
                 
-                <!-- NUOVO BOX METEO TORINO NATIVO E GARANTITO -->
-                <div class="weather-box">
-                    <iframe src="https://meteoblue.com" 
-                            frameborder="0" 
-                            scrolling="NO" 
-                            allowtransparency="true" 
-                            sandbox="allow-same-origin allow-scripts" 
-                            style="width: 100%; height: 160px; border: none; overflow: hidden;">
-                    </iframe>
+                <!-- BOX METEO TORINO CON MASCHERA DI PROTEZIONE ANTI-RICERCA -->
+                <div class="weather-wrapper">
+                    <div class="weather-box">
+                        <iframe src="https://meteoblue.com" 
+                                frameborder="0" 
+                                scrolling="NO" 
+                                allowtransparency="true" 
+                                sandbox="allow-same-origin allow-scripts" 
+                                style="width: 100%; height: 160px; border: none; overflow: hidden;">
+                        </iframe>
+                    </div>
+                    <!-- Questo blocco copre la casella di ricerca superiore e impedisce i clic accidentali -->
+                    <div class="weather-mask"></div>
                 </div>
                 <!-- BOX METEO FINE -->
 
