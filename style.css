@@ -8,7 +8,7 @@
 body {
     background-color: #f0f4f8;
     color: #333;
-    overflow: hidden; /* Evita lo scroll sul monitor principale */
+    overflow: hidden; 
     height: 100vh;
     width: 100vw;
 }
@@ -25,7 +25,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #003366; /* Blu Istituzionale */
+    background-color: #003366; 
     color: white;
     padding: 20px 40px;
     border-radius: 12px;
@@ -60,8 +60,8 @@ body {
 #current-time {
     display: block;
     font-size: 2.8rem;
-    color: #ffcc00; /* Giallo per evidenziare l'orologio */
-    font-family: monospace; /* Blocca il movimento oscillatorio dei caratteri */
+    color: #ffcc00;
+    font-family: monospace;
 }
 
 /* Main Content Layout */
@@ -80,6 +80,8 @@ body {
     padding: 25px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .notice-board h2, .news-board h2 {
@@ -90,7 +92,29 @@ body {
     font-size: 1.8rem;
 }
 
-/* Mascheramento intelligente casella di ricerca del Meteo */
+#notices-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Stile per incorporare il foglio Google a tutto schermo nella colonna */
+.google-sheet-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.google-sheet-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: white;
+}
+
+/* Meteo */
 .weather-wrapper {
     position: relative;
     margin-bottom: 25px;
@@ -98,11 +122,11 @@ body {
     overflow: hidden;
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    height: 122px; /* Ridotto per troncare la barra di ricerca in alto */
+    height: 122px;
 }
 
 .weather-box iframe {
-    margin-top: -38px; /* Spinge la casella di ricerca fuori dall'area visibile */
+    margin-top: -38px;
 }
 
 .weather-mask {
@@ -115,14 +139,13 @@ body {
     background: transparent;
 }
 
-/* Elementi delle schede degli avvisi e degli eventi */
+/* Schede avvisi colonna sinistra */
 .item-card {
     background: #f9fbfd;
     border-left: 6px solid #003366;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 4px;
-    animation: fadeIn 0.5s ease-in;
 }
 
 .item-card.urgent {
@@ -140,18 +163,7 @@ body {
     color: #555;
 }
 
-/* Dettagli Metadati eventi di Google Sheets (Ora e Luogo) */
-.event-meta {
-    font-size: 0.95rem;
-    color: #003366;
-    font-weight: 600;
-    margin-top: 4px;
-    margin-bottom: 8px;
-    display: flex;
-    gap: 15px;
-}
-
-/* Barra Scorrevole Inferiore (Ticker) */
+/* Ticker */
 .ticker-wrap {
     background: #333;
     color: white;
@@ -171,9 +183,4 @@ body {
 @keyframes ticker {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
 }
