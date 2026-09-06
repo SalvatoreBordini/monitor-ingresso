@@ -1,12 +1,12 @@
-// CONFIGURAZIONE: Il link reale di Google Sheets
-const GOOGLE_SHEET_CSV_URL = 'https://google.com';
+// CONFIGURAZIONE: Estratto l'ID univoco dal tuo link di Google Sheets
+const SHEET_ID = '1Rhm88eN5NYQejIzjKx7H4LGrrm8Xpv85xX-szGbkznPETKtk_gDXhrULWXPqZK4jO9f3RDm6E46r9B';
+const GOOGLE_JSON_URL = `https://google.com{SHEET_ID}/gviz/tq?tqx=out:json`;
 
 // ==========================================
 // 1. GESTIONE OROLOGIO (CON SECONDI) E DATA
 // ==========================================
 function updateClock() {
     const now = new Date();
-    
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -20,53 +20,39 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ==========================================
-// 2. PARSER UNIVERSALE DEI DATI GOOGLE SHEETS
-// ==========================================
-function parseCSV(text) {
-    const lines = text.split(/\r?\n/);
-    if (lines.length === 0 || !lines[0]) return [];
-    
-    // Identifica se Google Sheets separa con virgola o punto e virgola
-    const firstLine = lines[0];
-    const separator = firstLine.includes(';') ? ';' : ',';
-    
-    // Cattura le intestazioni pulite in minuscolo
-    const headers = firstLine.split(separator).map(h => h.trim().toLowerCase().replace(/"/g, ''));
-    const result = [];
-
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue; // Salta le righe vuote
-        
-        // Divide i campi ripulendo eventuali virgolette residue di Google
-        const currentline = line.split(separator).map(cell => cell.trim().replace(/"/g, ''));
-        const obj = {};
-        
-        for (let j = 0; j < headers.length; j++) {
-            obj[headers[j]] = currentline[j] || '';
-        }
-        result.push(obj);
-    }
-    return result;
-}
-
-// ==========================================
-// 3. RECUPERO DATI AUTOMATICO IN TEMPO REALE
+// 2. RECUPERO DATI IN MODALITÀ APÌ GOOGLE (ANTI-CORS)
 // ==========================================
 async function fetchMonitorData() {
     try {
-        // Forza l'aggiornamento superando i filtri di cache del browser
-        const separator = GOOGLE_SHEET_CSV_URL.includes('?') ? '&' : '?';
-        const finalUrl = GOOGLE_SHEET_CSV_URL + separator + 'nocache=' + new Date().getTime();
-        
+        const finalUrl = GOOGLE_JSON_URL + '&nocache=' + new Date().getTime();
         const response = await fetch(finalUrl);
-        const csvText = await response.text();
+        const text = await response.text();
         
-        const eventi = parseCSV(csvText);
+        // Google restituisce una stringa protetta "google.visualization.Query.setResponse({...})"
+        // Questo codice estrae solo il JSON puro all'interno delle parentesi tonda
+        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+        const data = JSON.parse(jsonString);
+        
+        // Elabora le righe della tabella di Google
+        const rows = data.table.rows;
+        const eventi = [];
+        
+        rows.forEach(row => {
+            const cells = row.c;
+            // Estrae i dati controllando se la cella esiste, altrimenti lascia vuoto
+            eventi.push({
+                data: cells[0] ? cells[0].v : '',
+                titolo: cells[1] ? cells[1].v : '',
+                ora: cells[2] ? cells[2].v : '',
+                luogo: cells[3] ? cells[3].v : '',
+                descrizione: cells[4] ? cells[4].v : ''
+            });
+        });
+        
         renderNews(eventi);
     } catch (error) {
-        console.error("Errore nel caricamento dei dati da Google Sheets:", error);
-        document.getElementById('news-container').innerHTML = '<p>Errore di connessione al calendario.</p>';
+        console.error("Errore di caricamento dall'API Google Sheets:", error);
+        document.getElementById('news-container').innerHTML = '<p>Errore di sincronizzazione con Google Sheets.</p>';
     }
 }
 
@@ -74,8 +60,8 @@ function renderNews(eventi) {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     
-    // Rimuove gli oggetti che non hanno i requisiti minimi compilati
-    const eventiValidi = eventi.filter(e => e.titolo && e.data);
+    // Rimuove le righe vuote o le righe di intestazione del foglio
+    const eventiValidi = eventi.filter(e => e.titolo && e.data && e.data.toLowerCase() !== 'data');
     
     if (eventiValidi.length === 0) {
         container.innerHTML = '<p style="color: #666; font-style: italic;">Nessun evento o circolare in programma.</p>';
@@ -83,14 +69,8 @@ function renderNews(eventi) {
     }
     
     eventiValidi.forEach(evento => {
-        const data = evento.data;
-        const titolo = evento.titolo;
-        const ora = evento.ora || '';
-        const luogo = evento.luogo || '';
-        const descrizione = evento.descrizione || '';
-        
-        const oraDettaglio = ora ? `🕒 Ore ${ora}` : '';
-        const luogoDettaglio = luogo ? `📍 ${luogo}` : '';
+        const oraDettaglio = evento.ora ? `🕒 Ore ${evento.ora}` : '';
+        const luogoDettaglio = evento.luogo ? `📍 ${evento.luogo}` : '';
         
         const infoSecondarie = (oraDettaglio || luogoDettaglio) 
             ? `<p class="event-meta">${oraDettaglio} &nbsp;&nbsp; ${luogoDettaglio}</p>` 
@@ -99,14 +79,14 @@ function renderNews(eventi) {
         const div = document.createElement('div');
         div.className = 'item-card';
         div.innerHTML = `
-            <h3>📅 ${data} - ${titolo}</h3>
+            <h3>📅 ${evento.data} - ${evento.titolo}</h3>
             ${infoSecondarie}
-            <p>${descrizione}</p>
+            <p>${evento.descrizione}</p>
         `;
         container.appendChild(div);
     });
 }
 
-// Esegui la prima lettura all'avvio e pianifica un controllo ogni 60 secondi
+// Avvia subito il controllo e ripeti ogni 60 secondi
 fetchMonitorData();
 setInterval(fetchMonitorData, 60000);
