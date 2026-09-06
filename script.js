@@ -25,11 +25,9 @@ function parseCSV(text) {
     const lines = text.split(/\r?\n/);
     if (lines.length === 0 || !lines) return [];
     
-    // Rileva automaticamente se Google separa le celle con virgola o punto e virgola
     const firstLine = lines[0];
     const separator = firstLine.includes(';') ? ';' : ',';
     
-    // Mappa le intestazioni del foglio
     const headers = firstLine.split(separator).map(h => h.trim().toLowerCase().replace(/"/g, ''));
     const result = [];
 
@@ -49,7 +47,45 @@ function parseCSV(text) {
 }
 
 // ==========================================
-// 3. RECUPERO DATI AUTOMATICO (ANTI-CACHE)
+// 3. FUNZIONE DI SUPPORTO PER CONVERTIRE IL TESTO DI GOOGLE IN DATA REALE
+// ==========================================
+function parseEventDate(dateStr) {
+    if (!dateStr) return null;
+    
+    const mesiIta = ["gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"];
+    const now = new Date();
+    let giorno = parseInt(dateStr.match(/\d+/), 10);
+    let mese = now.getMonth(); // Default mese corrente
+    let anno = now.getFullYear();
+
+    // Riconosce formati numerici come 12/03 o 12-03
+    const matchNumerico = dateStr.match(/(\d+)[\/\-](\d+)/);
+    if (matchNumerico) {
+        giorno = parseInt(matchNumerico[1], 10);
+        mese = parseInt(matchNumerico[2], 10) - 1;
+    } else {
+        // Riconosce formati testuali come "12 Mar" o "12 Marzo"
+        const strMinuscola = dateStr.toLowerCase();
+        for (let i = 0; i < mesiIta.length; i++) {
+            if (strMinuscola.includes(mesiIta[i])) {
+                mese = i;
+                break;
+            }
+        }
+    }
+
+    if (isNaN(giorno)) return null;
+
+    // Gestione del cambio anno a cavallo di Capodanno (es: a Dicembre vede un evento di Gennaio)
+    if (now.getMonth() === 11 && mese === 0) anno += 1;
+    // Se l'evento è di Dicembre ma siamo a Gennaio (evento passato)
+    if (now.getMonth() === 0 && mese === 11) anno -= 1;
+
+    return new Date(anno, mese, giorno, 0, 0, 0);
+}
+
+// ==========================================
+// 4. RECUPERO DATI AUTOMATICO (ANTI-CACHE)
 // ==========================================
 async function fetchMonitorData() {
     try {
@@ -69,7 +105,6 @@ function renderNews(eventi) {
     const container = document.getElementById('news-container');
     container.innerHTML = '';
     
-    // Filtra rimuovendo le righe vuote o l'intestazione ripetuta
     const eventiValidi = eventi.filter(e => e.titolo && e.data && e.data.toLowerCase() !== 'data');
     
     if (eventiValidi.length === 0) {
@@ -77,10 +112,27 @@ function renderNews(eventi) {
         return;
     }
     
-    // MODIFICA: Prende solo i primi 5 eventi della lista del foglio Google
-    const primiCinqueEventi = eventiValidi.slice(0, 5);
+    // Calcolo del range dei prossimi 10 giorni
+    const oggi = new Date();
+    oggi.setHours(0, 0, 0, 0);
     
-    primiCinqueEventi.forEach(evento => {
+    const dataScadenza = new Date();
+    dataScadenza.setDate(oggi.getDate() + 10);
+    dataScadenza.setHours(23, 59, 59, 999);
+
+    // MODIFICA: Filtra tenendo solo gli eventi compresi tra Oggi e i prossimi 10 giorni
+    const eventiProssimiDieciGiorni = eventiValidi.filter(evento => {
+        const dataEvento = parseEventDate(evento.data);
+        if (!dataEvento) return true; // Se la data non è chiara, per sicurezza la mostra
+        return dataEvento >= oggi && dataEvento <= dataScadenza;
+    });
+
+    if (eventiProssimiDieciGiorni.length === 0) {
+        container.innerHTML = '<p style="color: #666; font-style: italic; font-size: 1.1rem;">Nessun evento previsto nei prossimi 10 giorni.</p>';
+        return;
+    }
+    
+    eventiProssimiDieciGiorni.forEach(evento => {
         const data = evento.data || '';
         const titolo = evento.titolo || '';
         const ora = evento.ora || '';
