@@ -1,5 +1,5 @@
 // CONFIGURAZIONE: Link inserito e controllato direttamente nel codice
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm88eN5NYQejIzjKx7H4LGrrm8Xpv85xX-szGbkznPETKtk_gDXhrULWXPqZK4jO9f3RDm6E46r9B/pub?output=csv';
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRhm88eN5NYQejIzjKx7H4LGrrm8Xpv85xX-szGbkznPETKtk_gDXhrULWXPqZK4jO9f3RDm6E46r9B/pub?gid=0&single=true&output=csv';
 
 // ==========================================
 // 1. GESTIONE OROLOGIO (CON SECONDI) E DATA
