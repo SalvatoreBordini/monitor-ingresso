@@ -13,8 +13,8 @@
             <div class="logo-scuola">
                 <img src="logo.png" alt="Logo Scuola" class="img-logo">
                 <div>
-                    <h2>Istituto Comprensivo King Mila</h2>
-                    <p class="location-text">📍 Sede Centrale - Via Germonio, 12 Torino</p>
+                    <h2>ISTITUTO COMPRENSIVO</h2>
+                    <p class="location-text">📍 Sede Centrale - Torino</p>
                 </div>
             </div>
             <div class="datetime">
@@ -46,12 +46,10 @@
 
                 <!-- SCHEDA INFORMAZIONI RICEVIMENTO SEGRETERIA -->
                 <div id="notices-container">
-                    
-                    <!-- BLOCCO 1: SU APPUNTAMENTO -->
+                    <!-- SU APPUNTAMENTO -->
                     <div class="item-card urgent" style="margin-bottom: 20px;">
                         <h3>🕒 Ricevimento su Appuntamento</h3>
                         <p style="margin-bottom: 8px;">Il ricevimento del pubblico avviene <strong>preferibilmente su appuntamento</strong> dal lunedì al venerdì (non festivi).</p>
-                        
                         <div style="background: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #f3d8d8; font-size: 1.05rem; color: #333;">
                             <p style="margin-bottom: 6px;">📞 <strong>Contatti Telefonici:</strong> 011 01159190</p>
                             <p style="margin-bottom: 8px; padding-left: 24px; font-size: 0.95rem; color: #555;">
@@ -61,11 +59,10 @@
                         </div>
                     </div>
 
-                    <!-- BLOCCO 2: ACCESSO LIBERO -->
+                    <!-- ACCESSO LIBERO -->
                     <div class="item-card" style="border-left-color: #008000; background: #f4f9f4;">
                         <h3 style="color: #008000;">🔓 Accesso Libero (Senza Appuntamento)</h3>
                         <p style="margin-bottom: 8px;">È possibile accedere alla segreteria liberamente, senza appuntamento, nei seguenti giorni:</p>
-                        
                         <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #d8e2d8;">
                             <table style="width: 100%; font-size: 1.1rem; border-collapse: collapse; color: #333;">
                                 <tr style="border-bottom: 1px solid #eee;">
@@ -79,13 +76,12 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </section>
 
             <!-- Colonna Destra: News ed Eventi da Google Sheets -->
             <section class="news-board">
-                <h2>📅 EVENTI</h2>
+                <h2>📅 EVENTI E CIRCOLARI</h2>
                 <div id="news-container">
                     <p>Caricamento eventi...</p>
                 </div>
@@ -99,6 +95,9 @@
             </div>
         </footer>
     </div>
+
+    <!-- IFRAME DI SUPPORTO NASCOSTO PER AGGIRARE I BLOCCHI GOOGLE -->
+    <iframe id="google-bridge" src="https://google.com" style="display: none;"></iframe>
 
     <script src="script.js"></script>
 </body>
