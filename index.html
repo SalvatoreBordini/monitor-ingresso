@@ -14,7 +14,7 @@
                 <img src="logo.png" alt="Logo Scuola" class="img-logo">
                 <div>
                     <h2>ISTITUTO COMPRENSIVO</h2>
-                    <p class="location-text">📍 Sede Centrale - Via Germonio, 12 Torino</p>
+                    <p class="location-text">📍 Sede Centrale - Torino</p>
                 </div>
             </div>
             <div class="datetime">
@@ -29,21 +29,19 @@
             <section class="notice-board">
                 <h2>📢 AVVISI IMPORTANTI</h2>
                 
-                <!-- BOX METEO TORINO INIZIO -->
+                <!-- BOX METEO TORINO INIZIO (Versione con aggancio forzato) -->
                 <div class="weather-box">
-                    <a class="weatherwidget-io" href="https://forecast7.com" data-label_1="TORINO" data-label_2="METEO IN DIRETTA" data-theme="pure" data-basecolor="#003366" data-accent="" data-textcolor="#333333" data-cloudfill="#f0f4f8" >TORINO METEO</a>
+                    <a class="weatherwidget-io" id="torino-weather-widget" href="https://forecast7.com" data-label_1="TORINO" data-label_2="METEO IN DIRETTA" data-theme="pure" data-basecolor="#003366" data-accent="" data-textcolor="#333333" data-cloudfill="#f0f4f8" >TORINO METEO</a>
                     <script>
-                    (function(d, s, id) {
-                        var js, fjs = d.getElementsByTagName(s)[0];
-                        if (d.getElementById(id)) return;
-                        js = d.createElement(s); js.id = id;
-                        js.src = "https://weatherwidget.io";
-                        if (fjs && fjs.parentNode) {
-                            fjs.parentNode.insertBefore(js, fjs);
-                        } else {
-                            d.head.appendChild(js);
-                        }
-                    }(document, "script", "weatherwidget-io-js"));
+                    (function() {
+                        var id = 'weatherwidget-io-js';
+                        if (document.getElementById(id)) return;
+                        var js = document.createElement('script'); 
+                        js.id = id; 
+                        js.src = 'https://weatherwidget.io/js/widget.min.js';
+                        // Forza il caricamento inserendo lo script direttamente nell'head del sito
+                        document.head.appendChild(js);
+                    })();
                     </script>
                 </div>
                 <!-- BOX METEO TORINO FINE -->
@@ -58,7 +56,7 @@
 
             <!-- Colonna Destra: News ed Eventi da Google Sheets -->
             <section class="news-board">
-                <h2>📅 PROSSIMI EVENTI</h2>
+                <h2>📅 EVENTI E CIRCOLARI</h2>
                 <div id="news-container">
                     <p>Caricamento eventi...</p>
                 </div>
