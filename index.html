@@ -31,9 +31,19 @@
                 
                 <!-- BOX METEO TORINO INIZIO -->
                 <div class="weather-box">
-                    <a class="weatherwidget-io" href="https://forecast7.com" data-label_1="TORINO" data-label_2="METEO" data-theme="pure" data-basecolor="#003366" data-accent="" data-textcolor="#333333" data-cloudfill="#f0f4f8" >TORINO METEO</a>
+                    <a class="weatherwidget-io" href="https://forecast7.com" data-label_1="TORINO" data-label_2="METEO IN DIRETTA" data-theme="pure" data-basecolor="#003366" data-accent="" data-textcolor="#333333" data-cloudfill="#f0f4f8" >TORINO METEO</a>
                     <script>
-                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s);if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io;}}(document,'script','weatherwidget-io-js');
+                    (function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.src = "https://weatherwidget.io";
+                        if (fjs && fjs.parentNode) {
+                            fjs.parentNode.insertBefore(js, fjs);
+                        } else {
+                            d.head.appendChild(js);
+                        }
+                    }(document, "script", "weatherwidget-io-js"));
                     </script>
                 </div>
                 <!-- BOX METEO TORINO FINE -->
