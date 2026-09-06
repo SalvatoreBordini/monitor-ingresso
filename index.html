@@ -8,29 +8,45 @@
 </head>
 <body>
     <div class="container">
-        <!-- Intestazione con Logo, Nome Scuola e Orario -->
+        <!-- Intestazione con Logo, Nome Scuola, Luogo e Orario -->
         <header class="header">
             <div class="logo-scuola">
-		<img src="logo.png" alt="Logo Scuola" class="img-logo">
-                <h2>Istituto Comprensivo King-Mila</h2>
+                <img src="logo.png" alt="Logo Scuola" class="img-logo">
+                <div>
+                    <h2>ISTITUTO COMPRENSIVO</h2>
+                    <p class="location-text">📍 Sede Centrale - Torino</p>
+                </div>
             </div>
             <div class="datetime">
                 <span id="current-date">--/--/----</span>
-                <span id="current-time">00:00</span>
+                <span id="current-time">00:00:00</span>
             </div>
         </header>
 
         <!-- Contenuto Principale: Diviso in due colonne -->
         <main class="main-content">
-            <!-- Colonna Sinistra: Avvisi Principali -->
+            <!-- Colonna Sinistra: Avvisi Principali e Meteo -->
             <section class="notice-board">
                 <h2>📢 AVVISI IMPORTANTI</h2>
+                
+                <!-- BOX METEO TORINO INIZIO -->
+                <div class="weather-box">
+                    <a class="weatherwidget-io" href="https://forecast7.com" data-label_1="TORINO" data-label_2="METEO" data-theme="pure" data-basecolor="#003366" data-accent="" data-textcolor="#333333" data-cloudfill="#f0f4f8" >TORINO METEO</a>
+                    <script>
+                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s);if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io;}}(document,'script','weatherwidget-io-js');
+                    </script>
+                </div>
+                <!-- BOX METEO TORINO FINE -->
+
                 <div id="notices-container">
-                    <p>Caricamento avvisi...</p>
+                    <div class="item-card urgent">
+                        <h3>⚠️ Orario Ricevimento</h3>
+                        <p>Si ricorda che la segreteria riceve il pubblico esclusivamente su appuntamento dal lunedì al venerdì.</p>
+                    </div>
                 </div>
             </section>
 
-            <!-- Colonna Destra: News ed Eventi -->
+            <!-- Colonna Destra: News ed Eventi da Google Sheets -->
             <section class="news-board">
                 <h2>📅 EVENTI E CIRCOLARI</h2>
                 <div id="news-container">
@@ -42,7 +58,7 @@
         <!-- Barra Scorrevole in basso per comunicazioni flash -->
         <footer class="ticker-wrap">
             <div class="ticker" id="ticker-text">
-                Benvenuti a scuola! Si ricorda di rispettare gli orari di ingresso.
+                Benvenuti nell'Istituto Comprensivo! Si ricorda di rispettare gli orari di ingresso e di uscita.
             </div>
         </footer>
     </div>
